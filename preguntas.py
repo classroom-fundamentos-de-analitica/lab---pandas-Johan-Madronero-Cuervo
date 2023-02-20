@@ -101,7 +101,12 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    df = tbl0[['_c1']].copy()
+    salida = set(df.values.flatten().tolist())
+    salida = list(salida)
+    salida.sort()
+
+    return salida
 
 
 def pregunta_07():
@@ -117,7 +122,11 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+
+    df = tbl0[['_c1', '_c2']].copy()
+    df = df.groupby('_c1').sum('_c2').squeeze()
+
+    return df
 
 
 def pregunta_08():
@@ -135,7 +144,12 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+
+    df = tbl0.copy()
+    df['suma'] = df['_c0'] + df['_c2']
+
+
+    return df
 
 
 def pregunta_09():
@@ -153,7 +167,10 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    df = tbl0.copy()
+    df['year'] = df._c3.str[0:4]
+
+    return df
 
 
 def pregunta_10():
