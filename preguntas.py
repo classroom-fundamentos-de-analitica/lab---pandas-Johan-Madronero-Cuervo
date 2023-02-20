@@ -187,7 +187,31 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+
+    df = tbl0[['_c1', '_c2']].copy()
+    buscar = list(df['_c1'].unique())
+    buscar.sort()
+
+    dictio = {'_c0': [], '_c1':[]}
+
+    for letra in buscar:
+        lista = df[df['_c1'] == letra]
+        lista = lista.drop(columns=['_c1'])
+        salida = lista.values.flatten().tolist()
+        salida.sort()
+
+        conteo = ""
+        for numero in salida:
+            conteo += str(numero)
+            conteo += ":"
+        conteo = conteo[:-1]
+
+        dictio['_c0'].append(letra)
+        dictio['_c1'].append(conteo)
+
+    df = pd.DataFrame.from_dict(dictio)
+
+    return df
 
 
 def pregunta_11():
@@ -206,7 +230,32 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+
+    df = tbl1[['_c0', '_c4']].copy()
+    buscar = list(df['_c0'].unique())
+    buscar.sort()
+
+    dictio = {'_c0': [], '_c4':[]}
+
+    for letra in buscar:
+        lista = df[df['_c0'] == letra]
+        lista = lista.drop(columns=['_c0'])
+        salida = lista.values.flatten().tolist()
+        salida.sort()
+
+        conteo = ""
+
+        for numero in salida:
+            conteo += str(numero)
+            conteo += ","
+        conteo = conteo[:-1]
+
+        dictio['_c0'].append(letra)
+        dictio['_c4'].append(conteo)
+
+    df = pd.DataFrame.from_dict(dictio)
+
+    return df
 
 
 def pregunta_12():
@@ -224,7 +273,33 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    df = tbl2[['_c0', '_c5a', '_c5b']].copy()
+    df['_c4'] = df['_c5a'].astype(str) + ":" + df['_c5b'].astype(str)
+
+    buscar = list(df['_c0'].unique())
+    buscar.sort()
+
+    dictio = {'_c0': [], '_c5':[]}
+
+    for letra in buscar:
+        lista = df[df['_c0'] == letra]
+        lista = lista.drop(columns=['_c0', '_c5a', '_c5b'])
+        salida = lista.values.flatten().tolist()
+        salida.sort()
+
+        conteo = ""
+
+        for numero in salida:
+            conteo += str(numero)
+            conteo += ","
+        conteo = conteo[:-1]
+
+        dictio['_c0'].append(letra)
+        dictio['_c5'].append(conteo)
+
+    df = pd.DataFrame.from_dict(dictio)
+
+    return df
 
 
 def pregunta_13():
@@ -241,4 +316,8 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    df = pd.merge(tbl0, tbl2, on="_c0")
+    df = df[['_c1', '_c5b']].copy()
+    df = df.groupby('_c1').sum('_c5b').squeeze()
+
+    return df
