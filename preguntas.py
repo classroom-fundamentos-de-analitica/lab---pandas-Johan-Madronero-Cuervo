@@ -50,8 +50,10 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    df = tbl0.sort_values(by=['_c1'])
+    df = df["_c1"].value_counts(sort=False)
 
+    return df
 
 def pregunta_04():
     """
@@ -65,8 +67,10 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    df = tbl0[['_c1', '_c2']].copy()
+    df = df.groupby('_c1').mean()
 
+    return df.squeeze()
 
 def pregunta_05():
     """
@@ -82,7 +86,10 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    df = tbl0[['_c1', '_c2']].copy()
+    df = df.groupby('_c1').max().squeeze()
+
+    return df
 
 
 def pregunta_06():
