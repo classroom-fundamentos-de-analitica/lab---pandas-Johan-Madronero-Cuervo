@@ -101,12 +101,7 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    df = tbl0[['_c1']].copy()
-    salida = set(df.values.flatten().tolist())
-    salida = list(salida)
-    salida.sort()
-
-    return salida
+    return list(pd.Series(tbl1['_c4'].unique()).str.upper().sort_values())
 
 
 def pregunta_07():
@@ -188,31 +183,10 @@ def pregunta_10():
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
 
-    df = tbl0[['_c1', '_c2']].copy()
-    buscar = list(df['_c1'].unique())
-    buscar.sort()
-
-    dictio = {'_c0': [], '_c1':[]}
-
-    for letra in buscar:
-        lista = df[df['_c1'] == letra]
-        lista = lista.drop(columns=['_c1'])
-        salida = lista.values.flatten().tolist()
-        salida.sort()
-
-        conteo = ""
-        for numero in salida:
-            conteo += str(numero)
-            conteo += ":"
-        conteo = conteo[:-1]
-
-        dictio['_c0'].append(letra)
-        dictio['_c1'].append(conteo)
-
-    df = pd.DataFrame.from_dict(dictio)
-
-    return df
-
+    respuesta = tb.groupby('_c1').agg({'_c2': lambda x: sorted(list(x))})
+    for i, row in respuesta.iterrows():
+        row['_c2'] = ":".join([str(int) for int in row['_c2']])
+    return respuesta
 
 def pregunta_11():
     """
