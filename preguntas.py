@@ -183,7 +183,7 @@ def pregunta_10():
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
 
-    tb = tb10
+    tb = tbl0
     respuesta = tb.groupby('_c1').agg({'_c2': lambda x: sorted(list(x))})
     for i, row in respuesta.iterrows():
         row['_c2'] = ":".join([str(int) for int in row['_c2']])
