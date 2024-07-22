@@ -22,7 +22,7 @@ def pregunta_01():
     40
 
     """
-    return
+    return tbl0.shape[0]
 
 
 def pregunta_02():
@@ -33,7 +33,7 @@ def pregunta_02():
     4
 
     """
-    return
+    return tbl0.shape[1]
 
 
 def pregunta_03():
@@ -50,8 +50,10 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    df = tbl0.sort_values(by=['_c1'])
+    df = df["_c1"].value_counts(sort=False)
 
+    return df
 
 def pregunta_04():
     """
@@ -65,8 +67,10 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    df = tbl0[['_c1', '_c2']].copy()
+    df = df.groupby('_c1').mean()
 
+    return df.squeeze()
 
 def pregunta_05():
     """
@@ -82,7 +86,10 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    df = tbl0[['_c1', '_c2']].copy()
+    df = df.groupby('_c1').max().squeeze()
+
+    return df
 
 
 def pregunta_06():
@@ -94,7 +101,7 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    return list(pd.Series(tbl1['_c4'].unique()).str.upper().sort_values())
 
 
 def pregunta_07():
@@ -110,7 +117,11 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+
+    df = tbl0[['_c1', '_c2']].copy()
+    df = df.groupby('_c1').sum('_c2').squeeze()
+
+    return df
 
 
 def pregunta_08():
@@ -128,7 +139,12 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+
+    df = tbl0.copy()
+    df['suma'] = df['_c0'] + df['_c2']
+
+
+    return df
 
 
 def pregunta_09():
@@ -146,7 +162,10 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    df = tbl0.copy()
+    df['year'] = df._c3.str[0:4]
+
+    return df
 
 
 def pregunta_10():
@@ -163,8 +182,12 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
 
+    tb = tbl0
+    respuesta = tb.groupby('_c1').agg({'_c2': lambda x: sorted(list(x))})
+    for i, row in respuesta.iterrows():
+        row['_c2'] = ":".join([str(int) for int in row['_c2']])
+    return respuesta
 
 def pregunta_11():
     """
@@ -182,7 +205,32 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+
+    df = tbl1[['_c0', '_c4']].copy()
+    buscar = list(df['_c0'].unique())
+    buscar.sort()
+
+    dictio = {'_c0': [], '_c4':[]}
+
+    for letra in buscar:
+        lista = df[df['_c0'] == letra]
+        lista = lista.drop(columns=['_c0'])
+        salida = lista.values.flatten().tolist()
+        salida.sort()
+
+        conteo = ""
+
+        for numero in salida:
+            conteo += str(numero)
+            conteo += ","
+        conteo = conteo[:-1]
+
+        dictio['_c0'].append(letra)
+        dictio['_c4'].append(conteo)
+
+    df = pd.DataFrame.from_dict(dictio)
+
+    return df
 
 
 def pregunta_12():
@@ -200,7 +248,33 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    df = tbl2[['_c0', '_c5a', '_c5b']].copy()
+    df['_c4'] = df['_c5a'].astype(str) + ":" + df['_c5b'].astype(str)
+
+    buscar = list(df['_c0'].unique())
+    buscar.sort()
+
+    dictio = {'_c0': [], '_c5':[]}
+
+    for letra in buscar:
+        lista = df[df['_c0'] == letra]
+        lista = lista.drop(columns=['_c0', '_c5a', '_c5b'])
+        salida = lista.values.flatten().tolist()
+        salida.sort()
+
+        conteo = ""
+
+        for numero in salida:
+            conteo += str(numero)
+            conteo += ","
+        conteo = conteo[:-1]
+
+        dictio['_c0'].append(letra)
+        dictio['_c5'].append(conteo)
+
+    df = pd.DataFrame.from_dict(dictio)
+
+    return df
 
 
 def pregunta_13():
@@ -217,4 +291,8 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    df = pd.merge(tbl0, tbl2, on="_c0")
+    df = df[['_c1', '_c5b']].copy()
+    df = df.groupby('_c1').sum('_c5b').squeeze()
+
+    return df
